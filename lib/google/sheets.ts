@@ -1,5 +1,7 @@
 const SHEETS_API_BASE = "https://sheets.googleapis.com/v4/spreadsheets";
 
+export class SheetTabNotFoundError extends Error {}
+
 async function sheetsFetch(
   accessToken: string,
   path: string,
@@ -15,23 +17,34 @@ async function sheetsFetch(
   });
   if (!res.ok) {
     const body = await res.text();
+    if (res.status === 400 && body.includes("Unable to parse range")) {
+      throw new SheetTabNotFoundError(body);
+    }
     throw new Error(`Sheets API 오류 (${res.status}): ${body}`);
   }
   return res;
 }
 
-/** GAS의 sheet.getDataRange().getValues()에 해당 — 탭 전체 값을 2차원 배열로 읽는다. */
+/**
+ * GAS의 sheet.getDataRange().getValues()에 해당 — 탭 전체 값을 2차원 배열로 읽는다.
+ * 탭 이름이 존재하지 않으면(GAS의 getSheetByName()===null과 동일 상황) null을 반환한다.
+ */
 export async function getValues(
   accessToken: string,
   spreadsheetId: string,
   range: string
-): Promise<unknown[][]> {
-  const res = await sheetsFetch(
-    accessToken,
-    `/${spreadsheetId}/values/${encodeURIComponent(range)}`
-  );
-  const data = (await res.json()) as { values?: unknown[][] };
-  return data.values ?? [];
+): Promise<unknown[][] | null> {
+  try {
+    const res = await sheetsFetch(
+      accessToken,
+      `/${spreadsheetId}/values/${encodeURIComponent(range)}`
+    );
+    const data = (await res.json()) as { values?: unknown[][] };
+    return data.values ?? [];
+  } catch (err) {
+    if (err instanceof SheetTabNotFoundError) return null;
+    throw err;
+  }
 }
 
 /** GAS의 sheet.appendRow()에 해당 — 다음 빈 행에 안전하게 한 줄 추가 (자체 동시성 제어 포함) */

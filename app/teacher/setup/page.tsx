@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 declare global {
   interface Window {
@@ -50,6 +51,7 @@ function loadScriptOnce(src: string): Promise<void> {
 type Stage = "checking" | "ready" | "working" | "done" | "error";
 
 export default function TeacherSetupPage() {
+  const router = useRouter();
   const [stage, setStage] = useState<Stage>("checking");
   const [errorMessage, setErrorMessage] = useState("");
   const [studentLink, setStudentLink] = useState("");
@@ -67,9 +69,9 @@ export default function TeacherSetupPage() {
         setStage("ready");
       })
       .catch(() => {
-        window.location.href = "/teacher";
+        router.replace("/teacher");
       });
-  }, []);
+  }, [router]);
 
   async function finishWithSpreadsheet(spreadsheetId: string) {
     setStage("working");
