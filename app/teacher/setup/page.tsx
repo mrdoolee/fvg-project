@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import AboutButton from "../AboutButton";
 
 declare global {
   interface Window {
@@ -149,9 +150,10 @@ export default function TeacherSetupPage() {
 
   return (
     <div className="app-shell">
-      <div className="brand">
+      <div className="brand" style={{ display: "flex", alignItems: "center" }}>
         <span className="dot" />
         <span>Flashcard Voice Game System</span>
+        <AboutButton />
       </div>
       <div className="card">
         <h1 className="title">시트 준비</h1>

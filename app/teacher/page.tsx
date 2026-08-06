@@ -1,3 +1,5 @@
+import AboutButton from "./AboutButton";
+
 const ERROR_MESSAGES: Record<string, string> = {
   invalid_state: "로그인 요청이 만료되었거나 위조되었습니다. 다시 시도해주세요.",
   no_refresh_token:
@@ -14,9 +16,10 @@ export default async function TeacherLoginPage({
 
   return (
     <div className="app-shell">
-      <div className="brand">
+      <div className="brand" style={{ display: "flex", alignItems: "center" }}>
         <span className="dot" />
         <span>Flashcard Voice Game System</span>
+        <AboutButton />
       </div>
       <div className="card">
         <h1 className="title">교사용 로그인</h1>
