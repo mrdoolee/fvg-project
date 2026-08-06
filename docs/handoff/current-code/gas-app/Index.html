@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <?!= include('Stylesheet'); ?>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="brand"><span class="dot"></span><span id="brand-text">Flashcard Voice Game System</span></div>
+
+    <div class="error-box" id="error-box"></div>
+
+    <!-- ① 학생 선택/설정 -->
+    <div class="view active" id="view-login">
+      <div class="card">
+        <h1 class="title" id="app-title">Flashcard Voice Game</h1>
+        <p class="subtitle" id="app-subtitle">화면에 나온 단어를 정확히 발음하면 자동으로 채점됩니다.</p>
+
+        <p class="field-label">학년 선택</p>
+        <select class="select-box" id="select-grade">
+          <option value="">-- 학년 선택 --</option>
+        </select>
+
+        <p class="field-label">반 선택</p>
+        <select class="select-box" id="select-class" disabled>
+          <option value="">-- 먼저 학년을 선택하세요 --</option>
+        </select>
+
+        <p class="field-label">이름 선택</p>
+        <select class="select-box" id="select-student" disabled>
+          <option value="">-- 먼저 반을 선택하세요 --</option>
+        </select>
+
+        <p class="field-label">출제 방식 선택</p>
+        <div class="chip-row" id="mode-row">
+          <div class="chip selected" data-mode="SCORE">채점 모드</div>
+          <div class="chip" data-mode="TIME">시간측정 모드</div>
+        </div>
+        <p class="mode-desc" id="mode-desc">문항마다 제한시간 안에 맞히면 정답, 못 맞히면 오답으로 채점합니다.</p>
+
+        <div id="unit-block" style="display:none;">
+          <p class="field-label">단원 선택</p>
+          <select class="select-box" id="select-unit">
+            <option value="">전체</option>
+          </select>
+        </div>
+
+        <p class="field-label">문항 수 선택</p>
+        <div class="chip-row" id="chip-row">
+          <div class="chip" data-count="5">5</div>
+          <div class="chip selected" data-count="10">10</div>
+          <div class="chip" data-count="20">20</div>
+          <div class="chip" data-count="0">전체</div>
+        </div>
+
+        <div class="checklist">
+          <p>⚠ 시작 전 꼭 확인하세요</p>
+          <ul>
+            <li>카카오톡·인스타그램 인앱 브라우저 금지 (Chrome / Safari)</li>
+            <li>아이패드·아이폰은 반드시 Safari 사용</li>
+            <li>새 창(팝업)이 열리면 마이크 권한을 [허용]하세요</li>
+          </ul>
+        </div>
+
+        <button class="btn btn-primary" id="btn-start">이 정보로 평가 준비하기</button>
+      </div>
+    </div>
+
+    <!-- ② 대기 화면 (실질적 평가는 팝업에서 진행) -->
+    <div class="view" id="view-waiting">
+      <div class="spacer"></div>
+      <div class="mic-orbit">
+        <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+        <div class="mic-core">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
+            <path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3z"/>
+            <path d="M19 11a7 7 0 0 1-14 0"/><line x1="12" y1="18" x2="12" y2="22"/>
+          </svg>
+        </div>
+      </div>
+      <p class="status-line" id="waiting-text">새 창에서 평가가 진행 중입니다...</p>
+      <button class="btn btn-primary" id="btn-open-popup">🎙️ 마이크 권한 허용하고 평가 시작</button>
+      <button class="btn btn-ghost" id="btn-reopen" style="display:none;">평가 창이 안 보이면 다시 열기</button>
+      <button class="btn btn-primary" id="btn-retry-submit" style="display:none;">📤 결과 다시 제출하기</button>
+      <button class="btn btn-ghost" id="btn-cancel-back" style="display:none;">처음으로 돌아가기</button>
+      <div class="spacer"></div>
+    </div>
+
+    <!-- ③ 결과 화면 -->
+    <div class="view" id="view-result">
+      <div class="card">
+        <div class="score-hero" id="score-hero-score">
+          <div class="num" id="score-num">0</div>
+          <div class="unit">점 / 100점 환산</div>
+        </div>
+        <div class="score-hero" id="score-hero-time" style="display:none;">
+          <div class="num" id="time-num">0:00</div>
+          <div class="unit">전체 문항 완료까지 걸린 시간</div>
+        </div>
+        <div class="leaderboard-box" id="leaderboard-box" style="display:none;">
+          <p class="lb-title" id="leaderboard-title">🏆 이 단원 TOP 3</p>
+          <div id="leaderboard-list"></div>
+        </div>
+        <div class="stat-row" id="stat-row-score">
+          <div class="stat-box correct"><div class="n" id="stat-correct">0</div><div class="l">맞은 문항</div></div>
+          <div class="stat-box wrong"><div class="n" id="stat-wrong">0</div><div class="l">틀린 문항</div></div>
+          <div class="stat-box"><div class="n" id="stat-total">0</div><div class="l">전체 문항</div></div>
+        </div>
+        <div class="wrong-box" id="wrong-box" style="display:none;">
+          <p>❌ 틀린 문제</p>
+          <div class="tags" id="wrong-tags"></div>
+        </div>
+        <button class="btn btn-primary" id="btn-restart">처음으로 돌아가기</button>
+      </div>
+    </div>
+
+    <div class="footer-note">© 2026 Designed &amp; Developed by 두리쌤. All rights reserved.</div>
+  </div>
+
+  <script>
+    // "환경설정" 시트 값을 서버(doGet)에서 주입 — 클라이언트 코드는 이 값을 사용
+    var APP_CONFIG = <?!= JSON.stringify(config) ?>;
+  </script>
+  <?!= include('JavaScript'); ?>
+</body>
+</html>
