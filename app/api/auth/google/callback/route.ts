@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
 
   if (!code || !state || !expectedState || state !== expectedState) {
     return NextResponse.redirect(
-      new URL("/teacher?error=invalid_state", url.origin)
+      new URL("/?error=invalid_state", url.origin)
     );
   }
 
@@ -25,12 +25,12 @@ export async function GET(req: NextRequest) {
     // 혹시 못 받았으면 구글 계정 > 보안 > 타사 앱 액세스에서 이 앱 권한을 취소하고
     // 다시 로그인해야 refresh_token이 재발급된다.
     return NextResponse.redirect(
-      new URL("/teacher?error=no_refresh_token", url.origin)
+      new URL("/?error=no_refresh_token", url.origin)
     );
   }
 
   const session: TeacherSession = { refreshToken: tokens.refresh_token };
-  const res = NextResponse.redirect(new URL("/teacher/setup", url.origin));
+  const res = NextResponse.redirect(new URL("/", url.origin));
   res.cookies.set(TEACHER_SESSION_COOKIE, encryptJson(session), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

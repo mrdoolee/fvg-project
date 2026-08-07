@@ -66,6 +66,23 @@ export async function appendRow(
   );
 }
 
+/** 특정 범위(예: 셀 하나)를 있는 그대로 덮어쓴다 — appendRow와 달리 새 행을 추가하지 않는다. */
+export async function updateValues(
+  accessToken: string,
+  spreadsheetId: string,
+  range: string,
+  values: unknown[][]
+): Promise<void> {
+  await sheetsFetch(
+    accessToken,
+    `/${spreadsheetId}/values/${encodeURIComponent(range)}?valueInputOption=RAW`,
+    {
+      method: "PUT",
+      body: JSON.stringify({ values }),
+    }
+  );
+}
+
 /** 여러 범위를 한 번에 씀 (템플릿 시트 초기화용) */
 export async function batchUpdateValues(
   accessToken: string,
