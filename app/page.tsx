@@ -170,9 +170,20 @@ function TeacherDashboard() {
           <a
             href="/guide"
             aria-label="이용 안내"
-            style={{ fontSize: "16px", color: "var(--ink-soft)", textDecoration: "none" }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              fontSize: "13px",
+              fontWeight: 600,
+              color: "var(--ink-soft)",
+              textDecoration: "none",
+              border: "1.5px solid var(--border)",
+              borderRadius: "var(--radius-sm)",
+              padding: "6px 12px",
+            }}
           >
-            📘
+            📘 사용 메뉴얼
           </a>
           <AboutButton />
         </div>
