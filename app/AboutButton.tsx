@@ -17,7 +17,6 @@ export default function AboutButton() {
           cursor: "pointer",
           fontSize: "16px",
           padding: 0,
-          marginLeft: "auto",
           color: "var(--ink-soft)",
         }}
       >

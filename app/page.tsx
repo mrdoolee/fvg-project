@@ -67,8 +67,8 @@ function TeacherDashboard() {
   const [studentLink, setStudentLink] = useState("");
   const [linkReused, setLinkReused] = useState(false);
   const [copyLabel, setCopyLabel] = useState("링크 복사");
+  const [spreadsheetId, setSpreadsheetId] = useState("");
   const accessTokenRef = useRef<string>("");
-  const spreadsheetIdRef = useRef<string>("");
 
   useEffect(() => {
     fetch("/api/teacher/access-token")
@@ -85,14 +85,14 @@ function TeacherDashboard() {
       });
   }, []);
 
-  async function finishWithSpreadsheet(spreadsheetId: string, regenerate = false) {
+  async function finishWithSpreadsheet(id: string, regenerate = false) {
     setStage("working");
-    spreadsheetIdRef.current = spreadsheetId;
+    setSpreadsheetId(id);
     try {
       const res = await fetch("/api/teacher/sheet/link", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ spreadsheetId, regenerate }),
+        body: JSON.stringify({ spreadsheetId: id, regenerate }),
       });
       if (!res.ok) throw new Error("학생용 링크 생성에 실패했습니다.");
       const data = (await res.json()) as { link: string; reused: boolean };
@@ -166,7 +166,16 @@ function TeacherDashboard() {
       <div className="brand" style={{ display: "flex", alignItems: "center" }}>
         <span className="dot" />
         <span>Flashcard Voice Game System</span>
-        <AboutButton />
+        <div style={{ display: "flex", alignItems: "center", gap: "14px", marginLeft: "auto" }}>
+          <a
+            href="/guide"
+            aria-label="이용 안내"
+            style={{ fontSize: "16px", color: "var(--ink-soft)", textDecoration: "none" }}
+          >
+            📘
+          </a>
+          <AboutButton />
+        </div>
       </div>
 
       {stage === "login" ? (
@@ -209,6 +218,18 @@ function TeacherDashboard() {
 
           {stage === "done" ? (
             <>
+              <a
+                className="btn btn-primary"
+                href={`https://docs.google.com/spreadsheets/d/${spreadsheetId}/edit`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                📄 스프레드시트 열기
+              </a>
+              <p className="mode-desc">
+                시트에 가서 설정을 마무리한 후, 학생용 링크를 배포하세요.
+              </p>
+
               <div className="leaderboard-box">
                 <p className="lb-title">
                   {linkReused
@@ -223,7 +244,7 @@ function TeacherDashboard() {
               {linkReused ? (
                 <button
                   className="btn btn-ghost"
-                  onClick={() => finishWithSpreadsheet(spreadsheetIdRef.current, true)}
+                  onClick={() => finishWithSpreadsheet(spreadsheetId, true)}
                 >
                   새 링크로 재발급
                 </button>
