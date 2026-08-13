@@ -40,12 +40,25 @@ export async function createTemplateSpreadsheet(
       ],
     },
     {
+      // 빈 시트만 던져주면 스키마를 처음부터 이해해야 해서, 바로 지우고 써도 되는
+      // 예시 행을 몇 개 채워둔다 — /guide 문서의 열 설명과 그대로 대응된다.
       range: "학생명부!A1",
-      values: [["학년", "반", "id", "name"]],
+      values: [
+        ["학년", "반", "id", "name"],
+        ["1", "1", "10101", "홍길동"],
+        ["1", "1", "10102", "김철수"],
+        ["1", "2", "10201", "이영희"],
+      ],
     },
     {
       range: "데이터!A1",
-      values: [["question", "answers", "timeLimit", "unit", "lang"]],
+      values: [
+        ["question", "answers", "timeLimit", "unit", "lang"],
+        ["사과", "사과", "5", "과일", "ko-KR"],
+        ["바나나", "바나나", "5", "과일", "ko-KR"],
+        ["apple", "apple", "5", "영단어", "en-US"],
+        ["대한민국의 수도는?", "서울", "7", "", "ko-KR"],
+      ],
     },
     {
       range: "기록!A1",
