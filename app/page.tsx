@@ -165,7 +165,7 @@ function TeacherDashboard() {
     <div className="app-shell">
       <div className="brand" style={{ display: "flex", alignItems: "center" }}>
         <span className="dot" />
-        <span>Flashcard Voice Game System</span>
+        <span>Flashcard Voice Game Maker</span>
         <div style={{ display: "flex", alignItems: "center", gap: "14px", marginLeft: "auto" }}>
           <a
             href="/guide"
@@ -188,6 +188,20 @@ function TeacherDashboard() {
           <AboutButton />
         </div>
       </div>
+
+      {stage === "login" ? (
+        <div className="card" style={{ marginBottom: "20px" }}>
+          <h1 className="title" style={{ fontSize: "18px" }}>
+            🎙️ Flashcard Voice Game이 뭔가요?
+          </h1>
+          <p className="subtitle" style={{ marginBottom: 0 }}>
+            화면에 나온 단어나 문장을 학생이 소리 내어 말하면, 브라우저가 자동으로 듣고
+            정답 여부를 판정합니다. 결과는 선생님의 구글 시트에 자동으로 기록되고, 학생은
+            로그인 없이 링크만 열면 바로 응시할 수 있습니다. 이 페이지(Maker)는 선생님이
+            시트를 준비하고 그 학생용 링크를 발급받는 곳입니다.
+          </p>
+        </div>
+      ) : null}
 
       {stage === "login" ? (
         <div className="card">
@@ -237,7 +251,7 @@ function TeacherDashboard() {
               >
                 📄 스프레드시트 열기
               </a>
-              <p className="mode-desc">
+              <p style={{ fontSize: "12.5px", color: "var(--ink-soft)", lineHeight: 1.5, margin: "10px 0 22px" }}>
                 시트에 가서 설정을 마무리한 후, 학생용 링크를 배포하세요.
               </p>
 

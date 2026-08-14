@@ -34,9 +34,10 @@ export async function createTemplateSpreadsheet(
         ["key", "value"],
         ["MIC_PAGE_URL", micPage.url],
         ["MIC_PAGE_ORIGIN", micPage.origin],
-        ["BRAND_TEXT", ""],
-        ["APP_TITLE", ""],
-        ["APP_SUBTITLE", ""],
+        // 빈 값으로 두면 뭘 채워야 할지 알기 어려워서, 지우고 써도 되는 예시 문구를 넣어둔다.
+        ["BRAND_TEXT", "OO초등학교 영어수업"],
+        ["APP_TITLE", "단어 발음 평가"],
+        ["APP_SUBTITLE", "화면에 나온 단어를 정확히 발음해보세요!"],
       ],
     },
     {

@@ -5,7 +5,7 @@ export default function GuidePage() {
     <div className="app-shell">
       <div className="brand" style={{ display: "flex", alignItems: "center" }}>
         <span className="dot" />
-        <span>Flashcard Voice Game System</span>
+        <span>Flashcard Voice Game Maker</span>
         <Link
           href="/"
           style={{ marginLeft: "auto", fontSize: "13px", color: "var(--ink-soft)" }}
