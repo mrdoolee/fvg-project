@@ -251,7 +251,7 @@ function TeacherDashboard() {
               >
                 📄 스프레드시트 열기
               </a>
-              <p style={{ fontSize: "12.5px", color: "var(--ink-soft)", lineHeight: 1.5, margin: "10px 0 22px" }}>
+              <p style={{ fontSize: "12.5px", color: "var(--ink-soft)", lineHeight: 1.5, margin: "18px 0 24px" }}>
                 시트에 가서 설정을 마무리한 후, 학생용 링크를 배포하세요.
               </p>
 
