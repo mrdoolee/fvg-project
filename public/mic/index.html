@@ -403,15 +403,20 @@
       lastMicActivity = Date.now();
       // 침묵 등으로 엔진이 멈춰도, 문항이 아직 안 끝났으면 같은 엔진으로 재시동
       var stillWaiting = mode === 'TIME' ? !questionFinalized : (!questionFinalized && timeLeft > 0);
+      console.log('[mic-debug] onend, idx=' + idx + ' stillWaiting=' + stillWaiting + ' questionFinalized=' + questionFinalized + ' timeLeft=' + timeLeft);
       if (stillWaiting) {
         setTimeout(function(){
           if (questionFinalized) return;
-          try { recognition.start(); } catch (e) {}
+          try { recognition.start(); console.log('[mic-debug] onend-triggered restart start() OK, idx=' + idx); }
+          catch (e) { console.log('[mic-debug] onend-triggered restart start() THREW: ' + e + ', idx=' + idx); }
         }, 250);
       }
     };
 
-    r.onerror = function(){ lastMicActivity = Date.now(); };
+    r.onerror = function(evt){
+      lastMicActivity = Date.now();
+      console.log('[mic-debug] onerror: ' + evt.error + ' / ' + evt.message + ', idx=' + idx);
+    };
     r.onsoundstart = function(){ lastMicActivity = Date.now(); setSoundActive(true); };
     r.onsoundend   = function(){ lastMicActivity = Date.now(); setSoundActive(false); };
     r.onaudioend   = function(){ setSoundActive(false); };
@@ -426,16 +431,19 @@
       if (!recognition) { setBadge('wrong', '⚠️ 이 브라우저는 음성 인식을 지원하지 않습니다'); return; }
     }
     try { recognition.lang = item.lang || 'ko-KR'; } catch (e) {} // 문항별 언어 설정 반영
-    try { recognition.start(); } catch (e) { /* 이미 실행 중이면 무시 (정상 상황) */ }
+    try { recognition.start(); console.log('[mic-debug] startRecognition start() OK, idx=' + idx); }
+    catch (e) { console.log('[mic-debug] startRecognition start() THREW: ' + e + ', idx=' + idx); }
   }
 
   /** 재시동 버튼·감시타이머 공용: 같은 엔진을 멈췄다가 살짝 뒤에 다시 시작 (새 엔진을 만들지 않음) */
   function restartRecognitionEngine(){
+    console.log('[mic-debug] restartRecognitionEngine called, idx=' + idx);
     if (!recognition) { startRecognition(currentItem); return; }
     try { recognition.stop(); } catch (e) {}
     setTimeout(function(){
       if (questionFinalized) return;
-      try { recognition.start(); } catch (e) {}
+      try { recognition.start(); console.log('[mic-debug] restart start() OK, idx=' + idx); }
+      catch (e) { console.log('[mic-debug] restart start() THREW: ' + e + ', idx=' + idx); }
     }, 300);
   }
 
@@ -448,7 +456,9 @@
     clearInterval(micWatchdog);
     micWatchdog = setInterval(function(){
       if (questionFinalized) return;
-      if (Date.now() - lastMicActivity > 4000) {
+      var silentMs = Date.now() - lastMicActivity;
+      if (silentMs > 4000) {
+        console.log('[mic-debug] watchdog: ' + silentMs + 'ms silent, idx=' + idx + ' -> restart');
         restartRecognitionEngine();
       }
     }, 2000);

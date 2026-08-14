@@ -35,7 +35,7 @@ export async function createTemplateSpreadsheet(
         ["MIC_PAGE_URL", micPage.url],
         ["MIC_PAGE_ORIGIN", micPage.origin],
         // 빈 값으로 두면 뭘 채워야 할지 알기 어려워서, 지우고 써도 되는 예시 문구를 넣어둔다.
-        ["BRAND_TEXT", "OO초등학교 영어수업"],
+        ["BRAND_TEXT", "두리쌤중학교 과학수업"],
         ["APP_TITLE", "단어 발음 평가"],
         ["APP_SUBTITLE", "화면에 나온 단어를 정확히 발음해보세요!"],
       ],
