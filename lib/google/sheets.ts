@@ -95,12 +95,12 @@ export async function batchUpdateValues(
   });
 }
 
-/** 새 스프레드시트를 탭 구조까지 갖춰서 생성. 반환값은 생성된 spreadsheetId. */
+/** 새 스프레드시트를 탭 구조까지 갖춰서 생성. sheetIdsByTitle은 이후 열너비 등 구조 변경 시 필요. */
 export async function createSpreadsheet(
   accessToken: string,
   title: string,
   sheetTitles: string[]
-): Promise<string> {
+): Promise<{ spreadsheetId: string; sheetIdsByTitle: Record<string, number> }> {
   const res = await sheetsFetch(accessToken, "", {
     method: "POST",
     body: JSON.stringify({
@@ -110,6 +110,28 @@ export async function createSpreadsheet(
       })),
     }),
   });
-  const data = (await res.json()) as { spreadsheetId: string };
-  return data.spreadsheetId;
+  const data = (await res.json()) as {
+    spreadsheetId: string;
+    sheets: { properties: { sheetId: number; title: string } }[];
+  };
+  const sheetIdsByTitle: Record<string, number> = {};
+  for (const sheet of data.sheets) {
+    sheetIdsByTitle[sheet.properties.title] = sheet.properties.sheetId;
+  }
+  return { spreadsheetId: data.spreadsheetId, sheetIdsByTitle };
+}
+
+/**
+ * 값이 아니라 시트 구조(열 너비, 서식 등)를 바꿀 때 쓰는 batchUpdate.
+ * batchUpdateValues(/values:batchUpdate)와는 별개 엔드포인트(/{id}:batchUpdate)라 나눠둔다.
+ */
+export async function updateSpreadsheetStructure(
+  accessToken: string,
+  spreadsheetId: string,
+  requests: unknown[]
+): Promise<void> {
+  await sheetsFetch(accessToken, `/${spreadsheetId}:batchUpdate`, {
+    method: "POST",
+    body: JSON.stringify({ requests }),
+  });
 }

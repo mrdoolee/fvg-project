@@ -1,4 +1,8 @@
-import { batchUpdateValues, createSpreadsheet } from "./sheets";
+import {
+  batchUpdateValues,
+  createSpreadsheet,
+  updateSpreadsheetStructure,
+} from "./sheets";
 
 // 시트 스키마는 동결 — docs/handoff/MIGRATION_BRIEF.md "4. 현재 시트 스키마" 참고.
 // 탭 이름/열 순서/헤더를 바꾸려면 먼저 사용자에게 이유를 설명하고 승인을 받아야 한다.
@@ -131,9 +135,11 @@ export async function createTemplateSpreadsheet(
   accessToken: string,
   title: string
 ): Promise<string> {
-  const spreadsheetId = await createSpreadsheet(accessToken, title, [
-    ...SHEET_TABS,
-  ]);
+  const { spreadsheetId, sheetIdsByTitle } = await createSpreadsheet(
+    accessToken,
+    title,
+    [...SHEET_TABS]
+  );
 
   const micPage = getSharedMicPageConfig();
 
@@ -145,13 +151,13 @@ export async function createTemplateSpreadsheet(
       range: "환경설정!A1",
       values: [
         ["key", "value", "설명"],
-        ["MIC_PAGE_URL", micPage.url, "마이크 인식 페이지 주소 — 자동으로 채워짐, 수정하지 마세요"],
-        ["MIC_PAGE_ORIGIN", micPage.origin, "마이크 페이지 도메인(보안 검증용) — 자동으로 채워짐, 수정하지 마세요"],
+        ["MIC_PAGE_URL", micPage.url, "[수정금지] 마이크 인식 페이지 주소"],
+        ["MIC_PAGE_ORIGIN", micPage.origin, "[수정금지] 마이크 페이지 도메인(보안 검증용)"],
         // 빈 값으로 두면 뭘 채워야 할지 알기 어려워서, 지우고 써도 되는 예시 문구를 넣어둔다.
-        ["BRAND_TEXT", "두리쌤중학교 과학수업", "학생 화면 맨 위 브랜드 문구 — 자유롭게 수정 가능"],
-        ["APP_TITLE", "단어 발음 평가", "학생 화면 카드 제목 — 자유롭게 수정 가능"],
-        ["APP_SUBTITLE", "화면에 나온 단어를 정확히 발음해보세요!", "학생 화면 카드 부제 — 자유롭게 수정 가능"],
-        ["STUDENT_LINK", "", "학생용 링크 — 자동으로 채워짐, 수정하지 마세요"],
+        ["BRAND_TEXT", "두리쌤중학교 F.V.G.", "[수정가능] 학생 화면 맨 위 브랜드 문구"],
+        ["APP_TITLE", "Flashcard Voice Game", "[수정가능] 학생 화면 카드 제목"],
+        ["APP_SUBTITLE", "화면에 나온 단어를 정확히 발음해보세요!", "[수정가능] 학생 화면 카드 부제"],
+        ["STUDENT_LINK", "", "[수정금지] 학생용 링크, 링크 복사하여 학생에게 배부"],
       ],
     },
     {
@@ -188,6 +194,22 @@ export async function createTemplateSpreadsheet(
           "단원",
         ],
       ],
+    },
+  ]);
+
+  // 환경설정 B열(값)에는 URL/링크가 들어가서 기본 너비로는 다 안 보인다.
+  await updateSpreadsheetStructure(accessToken, spreadsheetId, [
+    {
+      updateDimensionProperties: {
+        range: {
+          sheetId: sheetIdsByTitle["환경설정"],
+          dimension: "COLUMNS",
+          startIndex: 1, // B열 (0-indexed)
+          endIndex: 2,
+        },
+        properties: { pixelSize: 500 },
+        fields: "pixelSize",
+      },
     },
   ]);
 
