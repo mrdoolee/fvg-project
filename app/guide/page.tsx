@@ -15,7 +15,7 @@ export default function GuidePage() {
       </div>
 
       <div className="card">
-        <h1 className="title">📘 이용 안내</h1>
+        <h1 className="title">📘 사용 메뉴얼</h1>
         <p className="subtitle">
           시트를 어떻게 채우고 학생에게 어떻게 배포하는지 정리했습니다.
         </p>
@@ -79,7 +79,8 @@ export default function GuidePage() {
             <li>Chrome 또는 Safari로 접속 (카카오톡·인스타그램 인앱 브라우저 금지)</li>
             <li>아이패드·아이폰은 반드시 Safari 사용</li>
             <li>새 창(팝업)이 열리면 마이크 권한을 [허용]</li>
-            <li>네이버 웨일·오페라·삼성 브라우저 등 크롬 기반이 아닌 브라우저는 음성인식이 항상 실패합니다 (앱 문제가 아니라 브라우저 자체 한계)</li>
+            <li>마이크로소프트 엣지는 열리긴 하지만 자체 음성인식 서버를 써서 한글 인식률이 크롬보다 많이 떨어짐 — 되도록 피하고 크롬 사용 권장</li>
+            <li>네이버 웨일·오페라·삼성 브라우저는 크로미움 기반이라도 구글의 음성인식 서버가 연결돼있지 않아 인식이 항상 실패합니다 (앱 문제가 아니라 브라우저 자체 한계)</li>
           </ul>
         </div>
       </div>

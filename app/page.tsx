@@ -169,7 +169,7 @@ function TeacherDashboard() {
         <div style={{ display: "flex", alignItems: "center", gap: "14px", marginLeft: "auto" }}>
           <a
             href="/guide"
-            aria-label="이용 안내"
+            aria-label="사용 메뉴얼"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -197,8 +197,9 @@ function TeacherDashboard() {
           <p className="subtitle" style={{ marginBottom: 0 }}>
             화면에 나온 단어나 문장을 학생이 소리 내어 말하면, 브라우저가 자동으로 듣고
             정답 여부를 판정합니다. 결과는 선생님의 구글 시트에 자동으로 기록되고, 학생은
-            로그인 없이 링크만 열면 바로 응시할 수 있습니다. 이 페이지(Maker)는 선생님이
-            시트를 준비하고 그 학생용 링크를 발급받는 곳입니다.
+            로그인 없이 링크만 열면 바로 응시할 수 있습니다.
+            <br />
+            이 페이지(Maker)는 선생님이 시트를 준비하고 그 학생용 링크를 발급받는 곳입니다.
           </p>
         </div>
       ) : null}
