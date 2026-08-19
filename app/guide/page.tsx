@@ -24,18 +24,23 @@ export default function GuidePage() {
         <p className="mode-desc" style={{ margin: "0 0 20px" }}>
           대시보드에서 구글로 로그인 → &quot;빈 템플릿 자동 생성&quot; 또는 &quot;내 드라이브에서
           기존 시트 선택&quot; → 학생용 링크가 뜨면 &quot;스프레드시트 열기&quot;로 넘어가서
-          아래 내용을 채운 다음, 링크를 학생들에게 배포하세요.
+          아래 내용을 채운 다음, 링크를 학생들에게 배포하세요. 다른 시트로 바꾸고 싶으면 링크
+          화면의 &quot;다른 시트 연결하기&quot;로 언제든 처음 단계부터 다시 진행할 수 있습니다.
         </p>
 
         <p className="field-label">2. 학생명부 탭</p>
         <p className="mode-desc" style={{ margin: "0 0 20px" }}>
           <code>학년 | 반 | id(학번) | name(이름)</code> 순서로 입력합니다. 학생은 화면에서
           학년→반→이름 순으로 좁혀가며 본인을 선택합니다. id가 비어있는 행은 무시됩니다.
+          템플릿을 새로 만들면 예시 학생 5명이 이미 들어있으니, 지우고 실제 명단으로
+          바꿔주세요.
         </p>
 
         <p className="field-label">3. 데이터 탭 (문항)</p>
         <p className="mode-desc" style={{ margin: "0 0 4px" }}>
           <code>question | answers | timeLimit | unit | lang</code> 순서로 입력합니다.
+          템플릿을 새로 만들면 실제로 바로 써볼 수 있는 예시 문항이 100개 넘게 들어있으니,
+          형식만 참고해서 필요한 만큼 지우고 채워넣으면 됩니다.
         </p>
         <ul style={{ fontSize: "13.5px", color: "var(--ink-soft)", lineHeight: 1.7, margin: "0 0 20px", paddingLeft: "18px" }}>
           <li><b>answers</b>: 정답이 여러 개면 쉼표로 구분 (예: 사과,애플)</li>
@@ -46,6 +51,10 @@ export default function GuidePage() {
         </ul>
 
         <p className="field-label">4. 환경설정 탭 (선택)</p>
+        <p className="mode-desc" style={{ margin: "0 0 4px" }}>
+          각 행의 C열(설명)에 그 값이 뭘 하는지, 수정해도 되는지(<b>[수정가능]</b>) 안
+          되는지(<b>[수정금지]</b>)가 이미 적혀있으니 시트에서 바로 확인하세요.
+        </p>
         <p className="mode-desc" style={{ margin: "0 0 4px" }}>
           <code>BRAND_TEXT</code> / <code>APP_TITLE</code> / <code>APP_SUBTITLE</code> 값을
           채우면 학생 화면 상단 문구를 바꿀 수 있습니다. 비워두면 기본 문구가 쓰입니다.{" "}
