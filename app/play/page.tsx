@@ -23,7 +23,10 @@ interface Config {
   BRAND_TEXT?: string;
   APP_TITLE?: string;
   APP_SUBTITLE?: string;
+  STUDENT_MODE?: string;
 }
+
+const ANONYMOUS_STUDENT = { id: "", name: "익명" };
 type QuizResult =
   | { mode: "TIME"; totalCount: number; elapsedSeconds: number }
   | { mode: "SCORE"; correctCount: number; totalCount: number; wrongQuestions: string[] };
@@ -118,6 +121,16 @@ function PlayPageInner() {
       .catch(() => {});
   }, [token]);
 
+  // ROSTER(기본, 명단만) | ROSTER_AND_ANONYMOUS(명단+익명 버튼) | ANONYMOUS_ONLY(익명만) —
+  // 값이 없거나 알 수 없으면 기존 동작(명단만)으로 안전하게 폴백한다.
+  const studentMode =
+    config.STUDENT_MODE === "ANONYMOUS_ONLY"
+      ? "anonymous"
+      : config.STUDENT_MODE === "ROSTER_AND_ANONYMOUS"
+      ? "both"
+      : "roster";
+  const isAnonymousSelected = selectedStudent?.id === "" && selectedStudent?.name === "익명";
+
   const brandText = config.BRAND_TEXT || "Flashcard Voice Game System";
   const appTitle = config.APP_TITLE || "Flashcard Voice Game";
   const appSubtitle = config.APP_SUBTITLE || "화면에 나온 단어를 정확히 발음하면 자동으로 채점됩니다.";
@@ -157,7 +170,11 @@ function PlayPageInner() {
   async function handleStart() {
     clearError();
     if (!selectedStudent) {
-      setErrorMessage("명단에서 본인 이름을 선택해주세요.");
+      setErrorMessage(
+        studentMode === "anonymous"
+          ? "참여 버튼을 눌러주세요."
+          : "명단에서 본인 이름을 선택해주세요."
+      );
       return;
     }
     setStarting(true);
@@ -361,63 +378,84 @@ function PlayPageInner() {
             <h1 className="title">{appTitle}</h1>
             <p className="subtitle">{appSubtitle}</p>
 
-            <p className="field-label">학년 선택</p>
-            <select
-              className="select-box"
-              value={selectedGrade}
-              onChange={(e) => {
-                setSelectedGrade(e.target.value);
-                setSelectedClassNo("");
-                setSelectedStudent(null);
-              }}
-            >
-              <option value="">-- 학년 선택 --</option>
-              {grades.map((g) => (
-                <option key={g} value={g}>
-                  {g}학년
-                </option>
-              ))}
-            </select>
+            {studentMode !== "anonymous" ? (
+              <>
+                <p className="field-label">학년 선택</p>
+                <select
+                  className="select-box"
+                  value={selectedGrade}
+                  onChange={(e) => {
+                    setSelectedGrade(e.target.value);
+                    setSelectedClassNo("");
+                    setSelectedStudent(null);
+                  }}
+                >
+                  <option value="">-- 학년 선택 --</option>
+                  {grades.map((g) => (
+                    <option key={g} value={g}>
+                      {g}학년
+                    </option>
+                  ))}
+                </select>
 
-            <p className="field-label">반 선택</p>
-            <select
-              className="select-box"
-              disabled={!selectedGrade}
-              value={selectedClassNo}
-              onChange={(e) => {
-                setSelectedClassNo(e.target.value);
-                setSelectedStudent(null);
-              }}
-            >
-              <option value="">
-                {selectedGrade ? "-- 반 선택 --" : "-- 먼저 학년을 선택하세요 --"}
-              </option>
-              {classes.map((c) => (
-                <option key={c} value={c}>
-                  {c}반
-                </option>
-              ))}
-            </select>
+                <p className="field-label">반 선택</p>
+                <select
+                  className="select-box"
+                  disabled={!selectedGrade}
+                  value={selectedClassNo}
+                  onChange={(e) => {
+                    setSelectedClassNo(e.target.value);
+                    setSelectedStudent(null);
+                  }}
+                >
+                  <option value="">
+                    {selectedGrade ? "-- 반 선택 --" : "-- 먼저 학년을 선택하세요 --"}
+                  </option>
+                  {classes.map((c) => (
+                    <option key={c} value={c}>
+                      {c}반
+                    </option>
+                  ))}
+                </select>
 
-            <p className="field-label">이름 선택</p>
-            <select
-              className="select-box"
-              disabled={!selectedClassNo}
-              value={selectedStudent?.id ?? ""}
-              onChange={(e) => {
-                const s = studentsInClass.find((st) => st.id === e.target.value);
-                setSelectedStudent(s ? { id: s.id, name: s.name } : null);
-              }}
-            >
-              <option value="">
-                {selectedClassNo ? "-- 이름 선택 --" : "-- 먼저 반을 선택하세요 --"}
-              </option>
-              {studentsInClass.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name} ({s.id})
-                </option>
-              ))}
-            </select>
+                <p className="field-label">이름 선택</p>
+                <select
+                  className="select-box"
+                  disabled={!selectedClassNo}
+                  value={isAnonymousSelected ? "" : selectedStudent?.id ?? ""}
+                  onChange={(e) => {
+                    const s = studentsInClass.find((st) => st.id === e.target.value);
+                    setSelectedStudent(s ? { id: s.id, name: s.name } : null);
+                  }}
+                >
+                  <option value="">
+                    {selectedClassNo ? "-- 이름 선택 --" : "-- 먼저 반을 선택하세요 --"}
+                  </option>
+                  {studentsInClass.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name} ({s.id})
+                    </option>
+                  ))}
+                </select>
+              </>
+            ) : null}
+
+            {studentMode !== "roster" ? (
+              <div style={{ margin: studentMode === "both" ? "-8px 0 24px" : "0 0 24px" }}>
+                {studentMode === "both" ? (
+                  <p className="mode-desc" style={{ margin: "0 0 10px" }}>또는</p>
+                ) : (
+                  <p className="field-label">참여 방법</p>
+                )}
+                <div
+                  className={`chip${isAnonymousSelected ? " selected" : ""}`}
+                  style={{ width: "100%" }}
+                  onClick={() => setSelectedStudent({ ...ANONYMOUS_STUDENT })}
+                >
+                  {isAnonymousSelected ? "✓ 이름 없이 참여" : "이름 없이 참여하기"}
+                </div>
+              </div>
+            ) : null}
 
             <p className="field-label">출제 방식 선택</p>
             <div className="chip-row">

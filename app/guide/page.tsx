@@ -46,11 +46,19 @@ export default function GuidePage() {
         </ul>
 
         <p className="field-label">4. 환경설정 탭 (선택)</p>
-        <p className="mode-desc" style={{ margin: "0 0 20px" }}>
+        <p className="mode-desc" style={{ margin: "0 0 4px" }}>
           <code>BRAND_TEXT</code> / <code>APP_TITLE</code> / <code>APP_SUBTITLE</code> 값을
           채우면 학생 화면 상단 문구를 바꿀 수 있습니다. 비워두면 기본 문구가 쓰입니다.{" "}
           <code>MIC_PAGE_URL</code> / <code>MIC_PAGE_ORIGIN</code> / <code>STUDENT_LINK</code>는
           앱이 자동으로 관리하니 직접 수정하지 않는 걸 권장합니다.
+        </p>
+        <p className="mode-desc" style={{ margin: "0 0 20px" }}>
+          <code>STUDENT_MODE</code>로 학생 참여 방식을 고를 수 있습니다: <code>ROSTER</code>
+          (기본값, 학생명부 명단에서만 선택), <code>ROSTER_AND_ANONYMOUS</code>(명단 선택 +
+          &quot;이름 없이 참여하기&quot; 버튼도 같이 보임), <code>ANONYMOUS_ONLY</code>(명단
+          없이 누구나 바로 참여) 중 하나를 정확히 입력하세요. 이름 없이 참여한 기록은{" "}
+          <code>기록</code> 탭에 전부 &quot;익명&quot;으로만 남아 누가 응시했는지 구분되지
+          않습니다.
         </p>
 
         <p className="field-label">5. 기록 탭</p>

@@ -157,6 +157,11 @@ export async function createTemplateSpreadsheet(
         ["BRAND_TEXT", "두리쌤중학교 F.V.G.", "[수정가능] 학생 화면 맨 위 브랜드 문구"],
         ["APP_TITLE", "Flashcard Voice Game", "[수정가능] 학생 화면 카드 제목"],
         ["APP_SUBTITLE", "화면에 나온 단어를 정확히 발음해보세요!", "[수정가능] 학생 화면 카드 부제"],
+        [
+          "STUDENT_MODE",
+          "ROSTER",
+          "[수정가능] 학생 참여 방식 — ROSTER(학생명부 명단만) / ROSTER_AND_ANONYMOUS(명단+이름 없이 참여 버튼) / ANONYMOUS_ONLY(이름 없이만 참여, 기록엔 전부 '익명'으로 남음) 중 하나만 정확히 입력",
+        ],
         ["STUDENT_LINK", "", "[수정금지] 학생용 링크, 링크 복사하여 학생에게 배부"],
       ],
     },
