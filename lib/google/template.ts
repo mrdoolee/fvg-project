@@ -139,15 +139,19 @@ export async function createTemplateSpreadsheet(
 
   await batchUpdateValues(accessToken, spreadsheetId, [
     {
+      // C열에 각 값이 뭘 하는지 설명을 달아둔다. STUDENT_LINK는 이 시점엔 값이 비어있지만
+      // 행을 미리 잡아두면 나중에 upsertEnvConfig가 새 행을 추가하는 대신 이 행을 채우게 되어
+      // 설명(C7)이 그대로 유지된다.
       range: "환경설정!A1",
       values: [
-        ["key", "value"],
-        ["MIC_PAGE_URL", micPage.url],
-        ["MIC_PAGE_ORIGIN", micPage.origin],
+        ["key", "value", "설명"],
+        ["MIC_PAGE_URL", micPage.url, "마이크 인식 페이지 주소 — 자동으로 채워짐, 수정하지 마세요"],
+        ["MIC_PAGE_ORIGIN", micPage.origin, "마이크 페이지 도메인(보안 검증용) — 자동으로 채워짐, 수정하지 마세요"],
         // 빈 값으로 두면 뭘 채워야 할지 알기 어려워서, 지우고 써도 되는 예시 문구를 넣어둔다.
-        ["BRAND_TEXT", "두리쌤중학교 과학수업"],
-        ["APP_TITLE", "단어 발음 평가"],
-        ["APP_SUBTITLE", "화면에 나온 단어를 정확히 발음해보세요!"],
+        ["BRAND_TEXT", "두리쌤중학교 과학수업", "학생 화면 맨 위 브랜드 문구 — 자유롭게 수정 가능"],
+        ["APP_TITLE", "단어 발음 평가", "학생 화면 카드 제목 — 자유롭게 수정 가능"],
+        ["APP_SUBTITLE", "화면에 나온 단어를 정확히 발음해보세요!", "학생 화면 카드 부제 — 자유롭게 수정 가능"],
+        ["STUDENT_LINK", "", "학생용 링크 — 자동으로 채워짐, 수정하지 마세요"],
       ],
     },
     {
@@ -156,9 +160,11 @@ export async function createTemplateSpreadsheet(
       range: "학생명부!A1",
       values: [
         ["학년", "반", "id", "name"],
-        ["1", "1", "10101", "홍길동"],
-        ["1", "1", "10102", "김철수"],
-        ["1", "2", "10201", "이영희"],
+        ["1", "1", "10101", "김두일"],
+        ["1", "1", "10102", "이두리"],
+        ["1", "2", "10201", "박두삼"],
+        ["2", "1", "20101", "최두사"],
+        ["2", "1", "20102", "한두오"],
       ],
     },
     {
