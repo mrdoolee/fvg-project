@@ -384,6 +384,7 @@
 
     r.onresult = function(evt){
       lastMicActivity = Date.now();
+      console.log('[mic-debug] onresult fired, idx=' + idx + ' resultIndex=' + evt.resultIndex + ' resultsLen=' + evt.results.length);
       if (questionFinalized || !currentItem) return;
       // continuous 모드에서는 evt.results가 세션 전체 누적 배열이므로,
       // 이번에 "새로" 들어온 결과만 evt.resultIndex부터 훑습니다.
@@ -392,6 +393,7 @@
         if (!result.isFinal) continue;
         var heard = result[0].transcript;
         lastHeard = heard; // 인식은 됐으나 정답과 불일치할 경우 진단용으로 표시
+        console.log('[mic-debug] heard: "' + heard + '", idx=' + idx);
         for (var i = 0; i < result.length; i++) {
           var alt = result[i].transcript;
           if (isAnswerMatch(alt, currentItem.answers)) { finalizeQuestion(true, currentItem); return; }
@@ -417,8 +419,8 @@
       lastMicActivity = Date.now();
       console.log('[mic-debug] onerror: ' + evt.error + ' / ' + evt.message + ', idx=' + idx);
     };
-    r.onsoundstart = function(){ lastMicActivity = Date.now(); setSoundActive(true); };
-    r.onsoundend   = function(){ lastMicActivity = Date.now(); setSoundActive(false); };
+    r.onsoundstart = function(){ lastMicActivity = Date.now(); setSoundActive(true); console.log('[mic-debug] onsoundstart, idx=' + idx); };
+    r.onsoundend   = function(){ lastMicActivity = Date.now(); setSoundActive(false); console.log('[mic-debug] onsoundend, idx=' + idx); };
     r.onaudioend   = function(){ setSoundActive(false); };
 
     return r;
