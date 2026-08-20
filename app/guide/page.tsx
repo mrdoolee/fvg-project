@@ -1,4 +1,5 @@
 import Link from "next/link";
+import FooterCredit from "../FooterCredit";
 
 export default function GuidePage() {
   return (
@@ -114,9 +115,7 @@ export default function GuidePage() {
         </p>
       </div>
 
-      <div className="footer-note">
-        © 2026 Designed &amp; Developed by 두리쌤. All rights reserved.
-      </div>
+      <FooterCredit />
     </div>
   );
 }

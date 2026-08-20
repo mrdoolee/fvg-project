@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useRef, useState } from "react";
 import AboutButton from "./AboutButton";
+import FooterCredit from "./FooterCredit";
 
 declare global {
   interface Window {
@@ -283,7 +284,7 @@ function TeacherDashboard() {
         </div>
       ) : null}
 
-      <div className="footer-note">© 2026 Designed &amp; Developed by 두리쌤. All rights reserved.</div>
+      <FooterCredit />
     </div>
   );
 }

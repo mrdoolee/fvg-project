@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import FooterCredit from "../FooterCredit";
 
 interface Student {
   grade: string;
@@ -641,7 +642,7 @@ function PlayPageInner() {
         </div>
       ) : null}
 
-      <div className="footer-note">© 2026 Designed &amp; Developed by 두리쌤. All rights reserved.</div>
+      <FooterCredit />
     </div>
   );
 }
